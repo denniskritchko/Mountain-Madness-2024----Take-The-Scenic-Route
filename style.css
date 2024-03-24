@@ -1,0 +1,73 @@
+body {
+    
+    /* background-image: url(Mountain_Range_Banner.jpg);
+     background-size: 1500px 200px;
+     background-repeat: no-repeat;*/
+     background-color: lightblue;
+ 
+   }
+ 
+ h1 {
+     color: black; /* Set the text color to black */
+     font-size: medium;
+     text-align: center; /* Center the heading horizontally */
+     font-family: Arial, sans-serif; /* Modern, sans-serif font */
+     font-size: 2.5em; /* Large, noticeable size */
+     margin-top: 20px; /* Top margin to ensure it's at the top but not right against the screen edge */
+     margin-bottom: 30px; /* Provides some space between the heading and the next element */
+ }
+ 
+ #map {
+     height: 520px; /* Fixed height */
+     width: 100%; /* Take up the full width of its container */
+ }
+ #myForm {
+     display: flex;
+     justify-content: center; /* Center the form's contents horizontally */
+     gap: 10px; /* Space between the input and button */
+     flex-wrap: wrap; /* Allows items to wrap if there's not enough space */
+     margin-top: 0px; /* Space below the title */
+ }
+ 
+ #myForm input[type="text"], #myForm button {
+     flex: 0; /* Allows the input and button to expand */
+     margin-bottom:20px;
+     min-width: 120px; /* Minimum width so they don't become too small */
+ }
+ 
+ #myForm button {
+     cursor: pointer; /* Changes the cursor to pointer when hovering over the button */
+     background-color: #00643f; /* Button background color */
+     color: white; /* Button text color */
+     border: none; /* Removes the border */
+     padding: 10px; /* Adds some padding inside the button */
+     border-radius: 5px; /* Rounds the corners of the button */
+ }
+
+ #travel-time {
+    color: black; /* Set the text color to black */
+    font-size: medium;
+    text-align: left; /* Center the heading horizontally */
+    font-family: Arial, sans-serif; /* Modern, sans-serif font */
+    font-size: 1em; /* Large, noticeable size */
+    margin-top: 20px; /* Top margin to ensure it's at the top but not right against the screen edge */
+    margin-bottom: 30px; /* Provides some space between the heading and the next element */
+  }
+ 
+ #myForm button:hover {
+     background-color: #3c9473; /* Lightens the button on hover */
+ }
+ 
+ .slider-texts-container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+     width: 100%; /* Adjust this as needed */
+     gap: 20px;
+ }
+ 
+ 
+ .slider{
+     width:200px;
+ }
