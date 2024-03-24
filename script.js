@@ -15,7 +15,7 @@ function initMap () {
         center: {lat: 49.2781, lng: -122.9199},
     });
 
-    var pos = {lat: 49.2903, lng: -122.7905};
+    var pos = {lat: 49.2781, lng: -122.9199};
   
     locationButton.textContent = "Pan to Current Location";
     locationButton.classList.add("custom-map-control-button");
@@ -68,19 +68,10 @@ function handlePlaces(places) {
   return places;
 }
 
-function takeLocation(end) {
-  const geocache = new google.maps.Geocoder();
-  geocache.geocode({ address: end }, (results, status) => {
-    if (status === "OK") {
-      const endLocation = results[0].geometry.location;
-      const endLatitude = endLocation.lat();
-      const endLongitude = endLocation.lng();
-      console.log("Geocoded end location: penis", endLatitude, endLongitude);
-    } else {
-      console.error("Geocoding failed:", status);
-    }
-  });
-  return endLocation;
+function calculateMidpointLocation(point1, point2) {
+  const midpointLat = (point1.lat + point2.lat) / 2;
+  const midpointLng = (point1.lng + point2.lng) / 2;
+  return new google.maps.LatLng(midpointLat, midpointLng);
 }
 
 function calculateAndDisplayRoute(directionsService, directionsRenderer, end, start, numOfStops, map) {
@@ -98,12 +89,29 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, end, st
       console.error("Geocoding failed:", status);
     }
   });
-
   const selectedMode = document.getElementById("mode").value;
 
-  var attractions = [];
-  var midpoint = new google.maps.LatLng(49.2276, -123.0076);
+  var attractions= [];
+  var midpoint = new google.maps.LatLng(start.lat, start.lng);
   var r = 10000;
+
+  switch(numOfStops){
+    case 1:
+      r = 1000;
+      break;
+    case 2:
+      r = 5000;
+      break;
+    case 3:
+      r = 10000;
+      break;
+    case 4:
+      r = 15000;
+      break;
+    case 5:
+      r = 20000;
+      break;
+  }
 
   // First nearby search for parks
   var requestPark = {
@@ -116,23 +124,19 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, end, st
   performNearbySearch(requestPark, map)
     .then(results => {
       for (var i = 0; i < results.length; i++) {
-        attractions.push(results[i].name);
+        attractions.push(results[i]);
+        console.log(results[i]);
       }
 
       var places = [];
 
       for (var i = 0; i < numOfStops; i++) { //For level of scenicness
         var randomIndex = Math.floor(Math.random() * attractions.length); // Random nearby attraction
-        console.log(attractions[randomIndex]);
-        var boolean = checkWithinRadius(attractions[randomIndex], midpoint, r);
-        while (!boolean){
-          var randomIndex = Math.floor(Math.random() * attractions.length); // Random nearby attraction
-          boolean = checkWithinRadius(attractions[randomIndex], midpoint, r);
-        }
-        places.push({ //Add to list 
-          location: attractions[randomIndex],
-          stopover: true,
-        });
+        console.log(attractions[randomIndex])
+        places.push({
+            location: attractions[randomIndex].geometry.location,
+            stopover: true
+          });
       }
 
       directionsService.route({
@@ -153,7 +157,6 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, end, st
     .catch(error => {
       console.error('Nearby search failed:', error);
     });
-    takeLocation(end);
 }
 
 function performNearbySearch(request, map) {
@@ -199,16 +202,28 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 function checkWithinRadius(testLocation, midpoint, radius){
-  var test=[]
-  test.push({ //Add to list 
-    location: testLocation,
-    stopover: true,
-  });
+  var endLoc = takeLocation(testLocation);
 
-  if ((calculateDistance(test[0].lat, test[0].lng, midpoint.lat, midpoint.lng) > radius)){
+  if ((calculateDistance(endLoc.lat(), endLoc.lng(), midpoint.lat(), midpoint.lng() > radius))){
+    console.log(testLocation);
     return false;
   }
   return true;
+}
+
+function takeLocation(end) {
+  const geocache = new google.maps.Geocoder();
+  geocache.geocode({ address: end }, (results, status) => {
+    if (status === "OK") {
+      const endLocation = results[0].geometry.location;
+      const endLatitude = endLocation.lat();
+      const endLongitude = endLocation.lng();
+      console.log("Geocoded end location:", endLatitude, endLongitude);
+    } else {
+      console.error("Geocoding failed:", status);
+    }
+  });
+  return endLocation;
 }
 
 window.initMap = initMap;
